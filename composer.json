@@ -1,10 +1,25 @@
 {
   "name": "nxsspryker/sentry",
   "license": "MIT",
+  "description": "Spryker module to use the sentry client with the nxsspryker error handler.",
+  "keywords": [
+    "sentry",
+    "spryker",
+    "log",
+    "logging",
+    "error-monitoring",
+    "error-handler",
+    "crash-reporting",
+    "crash-reports"
+  ],
   "authors": [
     {
       "name": "Mike Bertram",
       "email": "bertram@nexus-netsoft.com"
+    },
+    {
+      "name": "Karsten Frohwein",
+      "email": "karsten.frohwein@sonepar.ch"
     }
   ],
   "require-dev": {
@@ -16,11 +31,11 @@
     "spryker/testify": "*"
   },
   "require": {
-    "php": ">=7.1.0",
+    "php": ">=7.2.0",
     "spryker/error-handler": "^2.1.0",
     "spryker/kernel": "^3.0.0",
     "nxsspryker/error-handler": "^1.0.0",
-    "sentry/sentry": "^3.2"
+    "sentry/sdk": "^3.1"
   },
   "autoload": {
     "psr-0": {
