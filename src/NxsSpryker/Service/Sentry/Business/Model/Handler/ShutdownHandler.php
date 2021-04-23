@@ -1,16 +1,16 @@
-<?php
-
+<?php declare(strict_types=1);
 
 namespace NxsSpryker\Service\Sentry\Business\Model\Handler;
 
-
-use NxsSpryker\Service\NxsErrorHandler\Dependency\Plugin\NxsErrorHandlerPlugin;
+use ErrorException;
 use NxsSpryker\Service\NxsErrorHandler\Dependency\Plugin\NxsExceptionHandlerPlugin;
+use NxsSpryker\Service\Sentry\SentryService;
+use NxsSpryker\Service\Sentry\SentryServiceFactory;
 use Spryker\Service\Kernel\AbstractPlugin;
 
 /**
- * @method \NxsSpryker\Service\Sentry\SentryServiceFactory getFactory()
- * @method \NxsSpryker\Service\Sentry\SentryService getService()
+ * @method SentryServiceFactory getFactory()
+ * @method SentryService getService()
  */
 class ShutdownHandler extends AbstractPlugin implements NxsExceptionHandlerPlugin
 {
@@ -33,11 +33,7 @@ class ShutdownHandler extends AbstractPlugin implements NxsExceptionHandlerPlugi
     {
         $error = error_get_last();
 
-        if ($error === null || ($error['type'] & $this->getConfig()->getIgnoredErrorTypes()) !== 0) {
-            return;
-        }
-
-        $exception = new \ErrorException(
+        $exception = new ErrorException(
             @$error['message'],
             0,
             @$error['type'],

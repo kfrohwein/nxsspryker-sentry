@@ -1,17 +1,17 @@
-<?php
-
+<?php declare(strict_types=1);
 
 namespace NxsSpryker\Service\Sentry\Business\Model\Handler;
 
-
+use ErrorException;
 use NxsSpryker\Service\NxsErrorHandler\Dependency\Plugin\NxsErrorHandlerPlugin;
 use NxsSpryker\Service\Sentry\SentryConfig;
+use NxsSpryker\Service\Sentry\SentryService;
 use Spryker\Service\Kernel\AbstractPlugin;
-use Spryker\Shared\Config\Config;
+use function call_user_func;
 
 /**
- * @method \NxsSpryker\Service\Sentry\SentryConfig getConfig()
- * @method \NxsSpryker\Service\Sentry\SentryService getService()
+ * @method SentryConfig getConfig()
+ * @method SentryService getService()
  */
 class ErrorHandler extends AbstractPlugin implements NxsErrorHandlerPlugin
 {
@@ -20,9 +20,6 @@ class ErrorHandler extends AbstractPlugin implements NxsErrorHandlerPlugin
      */
     private $oldErrorHandler;
 
-    /**
-     * @param bool $isDebug
-     */
     public function register(bool $isDebug): void
     {
         if ($isDebug) {
@@ -35,24 +32,14 @@ class ErrorHandler extends AbstractPlugin implements NxsErrorHandlerPlugin
         }
     }
 
-    /**
-     * @param int $errno
-     * @param string $errstr
-     * @param string $errfile
-     * @param int $errline
-     * @param array $errcontext
-     *
-     * @return bool
-     */
     public function handleError(
-        int $errno,
-        string $errstr,
-        string $errfile,
-        int $errline,
-        array $errcontext
+        int $errNo,
+        string $errStr,
+        string $errFile,
+        int $errLine,
+        array $errContext
     ): bool {
-        if (($errno & $this->getConfig()->getIgnoredErrorTypes()) === 0) {
-            $exception = new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+            $exception = new ErrorException($errStr, 0, $errNo, $errFile, $errLine);
             $this->getService()->captureException(
                 $exception,
                 [
@@ -62,20 +49,18 @@ class ErrorHandler extends AbstractPlugin implements NxsErrorHandlerPlugin
                         ]
                 ]
             );
-        }
 
         if ($this->oldErrorHandler && $this->getConfig()->isRunPreviousHandler()) {
-            \call_user_func(
+            call_user_func(
                 $this->oldErrorHandler,
-                $errno,
-                $errstr,
-                $errfile,
-                $errline,
-                $errcontext
+                $errNo,
+                $errStr,
+                $errFile,
+                $errLine,
+                $errContext
             );
         }
 
         return true;
     }
-
 }

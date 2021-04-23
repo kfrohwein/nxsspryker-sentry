@@ -1,0 +1,13 @@
+{% if _widget.sentryIsActive == true %}
+    <script
+        src="https://js.sentry-cdn.com/{{ _widget.sentryDsn }}.min.js"
+        crossorigin="anonymous"
+    ></script>
+    <script>
+        Sentry.onLoad(function() {
+            Sentry.init(
+            {{ _widget.sentryConfig }}
+            );
+        });
+    </script>
+{% endif %}

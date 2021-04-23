@@ -1,23 +1,14 @@
-<?php
-declare(strict_types=1);
-
+<?php declare(strict_types=1);
 
 namespace NxsSpryker\Service\Sentry;
 
-
-use NxsSpryker\Service\Sentry\Business\Model\Client\ClientProviderInterface;
-use Spryker\Service\Kernel\AbstractFactory;
+use NxsSpryker\Service\Sentry\Business\Model\Client\SentryClient;
 use Spryker\Service\Kernel\AbstractServiceFactory;
 
 class SentryServiceFactory extends AbstractServiceFactory implements SentryServiceFactoryInterface
 {
-    /**
-     * @return \Raven_Client
-     * @throws \Spryker\Service\Kernel\Exception\Container\ContainerKeyNotFoundException
-     */
-    public function getSentryClient(): \Raven_Client
+    public function getSentryClient(): SentryClient
     {
         return $this->getProvidedDependency(SentryDependencyProvider::SENTRY_CLIENT);
     }
-
 }

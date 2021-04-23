@@ -1,16 +1,18 @@
-<?php
-
+<?php declare(strict_types=1);
 
 namespace NxsSpryker\Service\Sentry\Business\Model\Handler;
 
-
-use NxsSpryker\Service\NxsErrorHandler\Dependency\Plugin\NxsErrorHandlerPlugin;
+use ErrorException;
 use NxsSpryker\Service\NxsErrorHandler\Dependency\Plugin\NxsExceptionHandlerPlugin;
+use NxsSpryker\Service\Sentry\SentryService;
+use NxsSpryker\Service\Sentry\SentryServiceFactory;
 use Spryker\Service\Kernel\AbstractPlugin;
+use Throwable;
+use function call_user_func;
 
 /**
- * @method \NxsSpryker\Service\Sentry\SentryServiceFactory getFactory()
- * @method \NxsSpryker\Service\Sentry\SentryService getService()
+ * @method SentryServiceFactory getFactory()
+ * @method SentryService getService()
  */
 class ExceptionHandler extends AbstractPlugin implements NxsExceptionHandlerPlugin
 {
@@ -19,9 +21,6 @@ class ExceptionHandler extends AbstractPlugin implements NxsExceptionHandlerPlug
      */
     private $oldExceptionHandler;
 
-    /**
-     * @param bool $isDebug
-     */
     public function register(bool $isDebug): void
     {
         if ($isDebug) {
@@ -34,18 +33,8 @@ class ExceptionHandler extends AbstractPlugin implements NxsExceptionHandlerPlug
         }
     }
 
-    /**
-     * @param \Throwable $throwable
-     */
-    public function handleException(\Throwable $throwable): void
+    public function handleException(Throwable $throwable): void
     {
-        if (
-            $throwable instanceof \ErrorException
-            && ($throwable->getSeverity() & $this->getConfig()->getIgnoredErrorTypes()) === 0
-        ) {
-            return;
-        }
-
         $this->getService()->captureException(
             $throwable,
             [
@@ -57,11 +46,10 @@ class ExceptionHandler extends AbstractPlugin implements NxsExceptionHandlerPlug
         );
 
         if ($this->oldExceptionHandler && $this->getConfig()->isRunPreviousHandler()) {
-            \call_user_func(
+            call_user_func(
                 $this->oldExceptionHandler,
                 $throwable
             );
         }
     }
-
 }

@@ -1,7 +1,7 @@
 NxsSpryker/Sentry
 ===================
 
-Spryker module to add Sentry as error monitoring.
+Spryker module to add Sentry for error monitoring.
 
 
 Installation
@@ -90,43 +90,22 @@ Also you have to add the widget in your template:
 Configuration
 ------------------
 
-You can extend the client with an own plugin which implemements \NxsSpryker\Yves\Sentry\Dependency\Plugin\SentryClientPluginInterface.
-You can add them to the SentryDependencyProvider.
-
 Also you have to add "NxsSpryker" as a project namespace in your config_default.php.
 
 You have to configure an Sentry-Project for PHP in your configs:
 ```php
 use NxsSpryker\Service\Sentry\SentryConfig;
 
-$config[SentryConfig::URL_KEY] = 'abc';
-$config[SentryConfig::URL_DOMAIN] = 'sentry.io';
-$config[SentryConfig::URL_PROJECT] = 'myproject';
-
 $config[SentryConfig::IS_ACTIVE] = true;
-$config[SentryConfig::CLIENT_URL] = sprintf(
-    'https://%s@%s/%s',
-    $config[SentryConfig::URL_KEY],
-    $config[SentryConfig::URL_DOMAIN],
-    $config[SentryConfig::URL_PROJECT]
-);
+$config[SentryConfig::CLIENT_URL] = [];
 ```
 
 
-You have to configure an Sentry-Project for JS in your configs:
+You have to configure a Sentry-Project for JS in your configs:
 ```php
 use NxsSpryker\Yves\SentryWidget\SentryWidgetConfig;
 
-$config[SentryWidgetConfig::URL_KEY] = 'abc';
-$config[SentryWidgetConfig::URL_DOMAIN] = 'sentry.io';
-$config[SentryWidgetConfig::URL_PROJECT] = 'myproject';
-
 $config[SentryWidgetConfig::JS_IS_ACTIVE] = true;
-$config[SentryWidgetConfig::JS_CLIENT_URL] = sprintf(
-    'https://%s@%s/%s',
-    $config[SentryWidgetConfig::URL_KEY],
-    $config[SentryWidgetConfig::URL_DOMAIN],
-    $config[SentryWidgetConfig::URL_PROJECT]
-);
+$config[SentryWidgetConfig::JS_CLIENT_URL] = [];
 
 ```
